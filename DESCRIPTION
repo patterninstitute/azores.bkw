@@ -1,0 +1,37 @@
+Package: azores.bkw
+Type: Package
+Title: R Compendium Accompanying Peres dos Santos et al. (2026)
+Version: 0.1.5
+Authors@R: c(
+    person(given = "Ramiro", family = "Magno",
+      email = "rmagno@pattern.institute",
+      role = c("aut", "cre"),
+      comment = c(ORCID = "0000-0001-5226-3441")),
+    person(given = "Rui", family = "Peres dos Santos",
+      email = "rpsantos@pattern.institute",
+      role = c("aut", "dtc"),
+      comment = c(ORCID = "0000-0002-5979-0700")),
+    person(given = "Rita", family = "Castilho",
+      email = "rcastil@ualg.pt", role = c("aut", "ths"), 
+      comment = c(ORCID = "0000-0003-0727-3688")),
+    person("CCMAR",
+    role = c("cph", "fnd"))
+    )
+Description: An R Compendium providing data, code and documentation needed to
+    replicate the results of the paper Peres dos Santos, R., Sears, R.,
+     Magno, R. and Castilho, R. xxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx. JOURNAL XX, DDD–DDD (YYYY).
+    <doi:xx.xxxx/xxxxxx-xxx-xxxxx-x>.
+License: CC BY 4.0
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Suggests: 
+    azores.bathymetry (>= 0.0.6),
+    azores.cetaceans (>= 0.0.2)
+Remotes: 
+    patterninstitute/azores.cetaceans,
+    patterninstitute/azores.bathymetry
+Imports: 
+    CAOP.RAA.2024
