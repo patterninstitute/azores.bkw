@@ -1,14 +1,14 @@
 library(tidyverse)
 
-path <- here::here("data-raw/M_Data.xlsx")
-msp_data_raw <- readxl::read_xlsx(path, col_names = TRUE, skip = 1L, sheet = 4)
+path <- here::here("data-raw/Zc_Data.xlsx")
+zc_data_raw <- readxl::read_xlsx(path, col_names = TRUE, skip = 1L, sheet = 4)
 
 #
 # `sightings`
 #
 
 sightings01 <-
-  msp_data_raw |>
+  zc_data_raw |>
   dplyr::mutate(sighting_id = as.integer(Sighting))
 
 sightings02 <-
@@ -37,7 +37,7 @@ sightings02 <-
       tz = "UTC"
     ),
     other_species = dplyr::case_when(
-      `OT. Species` == "NO" ~ NA_character_,
+      `OT. Species` == "NO" ~ NA_character_, #Did not work check with Ramiro
       `OT. Species` == "PM" ~ "Physeter macrocephalus",
       .default = NA_character_
     )
@@ -51,14 +51,13 @@ sightings03 <-
   dplyr::mutate(final_time = dplyr::if_else(is.na(final_time),
                                             initial_time + 60, # 1 min = 60 seconds
                                             final_time))
-msp.sightings <- sightings03
-
+zc.sightings <- sightings03
 
 #
 # `ethology`
 #
 
-msp.ethology <-
+zc.ethology <-
   sightings01 |>
   dplyr::transmute(sighting_id,
                    dplyr::across(FO:NI...30)) |>
@@ -95,7 +94,7 @@ msp.ethology <-
 # `pod_age_composition`
 #
 
-msp.pod_age_composition <-
+zc.pod_age_composition <-
   sightings01 |>
   dplyr::transmute(sighting_id,
                    dplyr::across(Max:NI...36)) |>
@@ -128,7 +127,7 @@ msp.pod_age_composition <-
 # `reaction_to_boat`
 #
 
-msp.reaction_to_boat <-
+zc.reaction_to_boat <-
   sightings01 |>
   dplyr::transmute(sighting_id,
                    dplyr::across(A:Ni)) |>
@@ -149,7 +148,7 @@ msp.reaction_to_boat <-
     )
   )
 
-usethis::use_data(msp.ethology, overwrite = TRUE)
-usethis::use_data(msp.pod_age_composition, overwrite = TRUE)
-usethis::use_data(msp.reaction_to_boat, overwrite = TRUE)
-usethis::use_data(msp.sightings, overwrite = TRUE)
+usethis::use_data(zc.ethology, overwrite = TRUE)
+usethis::use_data(zc.pod_age_composition, overwrite = TRUE)
+usethis::use_data(zc.reaction_to_boat, overwrite = TRUE)
+usethis::use_data(zc.sightings, overwrite = TRUE)
