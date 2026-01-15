@@ -35,3 +35,5 @@ Remotes:
     patterninstitute/azores.bathymetry
 Imports: 
     CAOP.RAA.2024
+Depends: 
+    R (>= 3.5)
