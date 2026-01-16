@@ -26,7 +26,7 @@ License: CC BY 4.0
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Suggests: 
     azores.bathymetry (>= 0.0.6),
     azores.cetaceans (>= 0.0.2)
@@ -34,6 +34,10 @@ Remotes:
     patterninstitute/azores.cetaceans,
     patterninstitute/azores.bathymetry
 Imports: 
-    CAOP.RAA.2024
+    CAOP.RAA.2024,
+    dplyr,
+    lubridate,
+    readxl,
+    vctrs
 Depends: 
     R (>= 3.5)
