@@ -1,8 +1,7 @@
 library(tidyverse)
 
-path < here::here("data-raw/M_Data.xlsx")
+path <- here::here("data-raw/M_Data.xlsx")
 raw_sightings <- read_raw_sightings(path = path)
-
 
 #
 # `sightings`
@@ -67,6 +66,3 @@ usethis::use_data(msp.ethology, overwrite = TRUE)
 usethis::use_data(msp.pod_age_composition, overwrite = TRUE)
 usethis::use_data(msp.reaction_to_boat, overwrite = TRUE)
 usethis::use_data(msp.sightings, overwrite = TRUE)
-
-
-
