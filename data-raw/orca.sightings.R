@@ -17,7 +17,7 @@ species <- dplyr::filter(blackfish, in_study) |> dplyr::pull(species)
 
 #  Global Biodiversity Information Facility (GBIF) records for the species of
 #  interest, i.e. the ones indicated in `species`.
-oo.gbif <- get_gbif_occurrences(species) |>
+oo.gbif <- dwl_gbif_occurrences(species) |>
   dplyr::rename(datetime = "eventDate") |>
   dplyr::mutate(datetime = str_replace(datetime, "(T\\d{2}:\\d{2}$)", "\\1:00")) |>
   dplyr::mutate(datetime = lubridate::as_datetime(datetime))
