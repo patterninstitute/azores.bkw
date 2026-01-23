@@ -7,9 +7,7 @@ library(azores.rorquals)
 library(azores.bathymetry)
 library(azores.cetaceans)
 
-data_path <- "~/sci/datasets/azores-bkw-data"
-cms_path <- file.path(data_path, "cms-azores-data")
-
+cms_path <- "data-raw/cms-azores-data"
 
 presences <- azores.rorquals::presences_sf
 presences_rps <- presences |>
