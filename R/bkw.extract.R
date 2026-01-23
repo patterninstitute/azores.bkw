@@ -29,6 +29,8 @@ read_sst <- function(date, dir, resolution = 500, w = 5) {
     tibble::tibble(date = date_) |>
     dplyr::left_join(sst_dates, by = "date")
 
+  cli::cli_inform("{.file {tbl$file}} -- {date}")
+
   sp <- terra::rast(x = file.path(dir, tbl$file), lyrs = tbl$i) |>
     terra::focal(w = w, fun = mean, na.policy = "only", na.rm = TRUE)
   # Convert from Kelvin to Celsius.
@@ -74,6 +76,8 @@ read_hmlmeso <- function(date, dir, resolution = 500, w = 5) {
     tibble::tibble(date = date_) |>
     dplyr::left_join(hmlmeso_dates, by = "date")
 
+  cli::cli_inform("{.file {tbl$file}} -- {date}")
+
   sp <- terra::rast(x = file.path(dir, tbl$file), lyrs = tbl$i) |>
     terra::focal(w = w, fun = mean, na.policy = "only", na.rm = TRUE)
   terra::project(sp, y = azores.bathymetry::azores_grid(resolution = resolution, type = "rast"), method = "near")
@@ -116,6 +120,8 @@ read_lmeso <- function(date, dir, resolution = 500, w = 5) {
   tbl <-
     tibble::tibble(date = date_) |>
     dplyr::left_join(lmeso_dates, by = "date")
+
+  cli::cli_inform("{.file {tbl$file}} -- {date}")
 
   sp <- terra::rast(x = file.path(dir, tbl$file), lyrs = tbl$i) |>
     terra::focal(w = w, fun = mean, na.policy = "only", na.rm = TRUE)
@@ -160,6 +166,8 @@ read_mlmeso <- function(date, dir, resolution = 500, w = 5) {
   tbl <-
     tibble::tibble(date = date_) |>
     dplyr::left_join(mlmeso_dates, by = "date")
+
+  cli::cli_inform("{.file {tbl$file}} -- {date}")
 
   sp <- terra::rast(x = file.path(dir, tbl$file), lyrs = tbl$i) |>
     terra::focal(w = w, fun = mean, na.policy = "only", na.rm = TRUE)

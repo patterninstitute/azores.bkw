@@ -7,7 +7,10 @@ library(azores.rorquals)
 library(azores.bathymetry)
 library(azores.cetaceans)
 
-env_lay_pah <- "/Users/ruisantos/Desktop/Github/azores.bkw/data-raw/env_layers"
+data_path <- "~/sci/datasets/azores-bkw-data"
+cms_path <- file.path(data_path, "cms-azores-data")
+
+
 presences <- azores.rorquals::presences_sf
 presences_rps <- presences |>
   dplyr::filter(source == "rps")
@@ -22,14 +25,14 @@ tidyterra::autoplot(slope)
 #sst
 #
 
-sst_sf <- extract_sst(presences_rps, dir = env_lay_pah) |>
+sst_sf <- extract_sst(presences_rps, dir = cms_path) |>
   dplyr::select("sst", "date", "geometry")
 
 #
 #hmlmeso
 #
 
-hmlmeso_sf <- extract_hmlmeso(presences_rps, dir = env_lay_pah) |>
+hmlmeso_sf <- extract_hmlmeso(presences_rps, dir = cms_path) |>
   dplyr::select("hmlmeso", "date", "geometry")
 
 
@@ -37,7 +40,7 @@ hmlmeso_sf <- extract_hmlmeso(presences_rps, dir = env_lay_pah) |>
 #lmeso
 #
 
-lmeso_sf <- extract_lmeso(presences_rps, dir = env_lay_pah)|>
+lmeso_sf <- extract_lmeso(presences_rps, dir = cms_path)|>
   dplyr::select("lmeso", "date", "geometry")
 
 
@@ -45,7 +48,7 @@ lmeso_sf <- extract_lmeso(presences_rps, dir = env_lay_pah)|>
 #mlmeso
 #
 
-mlmeso_sf <- extract_mlmeso(presences_rps, dir = env_lay_pah)|>
+mlmeso_sf <- extract_mlmeso(presences_rps, dir = cms_path)|>
   dplyr::select("mlmeso", "date", "geometry")
 
 #
