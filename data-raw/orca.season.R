@@ -1,20 +1,15 @@
-library(tidyverse)
-library(here)
-library(lubridate)
-library(readr)
+library(dplyr)
+library(usethis)
+library(azores.bkw)
 
-orca.sightings <- readr::read_delim(
-  here::here("data", "orca.sightings.csv.gz"),
-  delim = ","
-)
-
-orca.season <- orca.sightings |>
+orca.season <-
+  azores.bkw::oo.sightings |>
   dplyr::mutate(
     season = dplyr::case_when(
-      lubridate::month(date) %in% c(1, 2, 3)   ~ "winter",
-      lubridate::month(date) %in% c(4, 5, 6)   ~ "spring",
-      lubridate::month(date) %in% c(7, 8, 9)   ~ "summer",
-      lubridate::month(date) %in% c(10, 11, 12) ~ "autumn"
+      lubridate::month(date) %in% 1:3 ~ "winter",
+      lubridate::month(date) %in% 4:6 ~ "spring",
+      lubridate::month(date) %in% 7:9 ~ "summer",
+      lubridate::month(date) %in% 10:12 ~ "autumn"
     )
   )
 
