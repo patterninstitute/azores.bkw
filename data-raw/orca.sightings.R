@@ -1,26 +1,30 @@
-library(tidyverse)
 library(here)
-library(raster)
-library(dismo)
-library(azores.cetaceans)
 library(robis)
 library(dplyr)
 library(purrr)
+library(readr)
 library(lubridate)
 library(stringr)
-library(azores.rorquals)
+library(hms)
+library(usethis)
 
-blackfish <- readr::read_csv2(here::here("data-raw", "blackfish.csv"), col_types = "ccl")
+library(azores.rorquals)
+library(azores.cetaceans)
+library(azores.bkw)
+
+blackfish <- readr::read_delim(here::here("data-raw", "blackfish.csv"), col_types = "ccl", delim = ";")
 
 # Species of interest, i.e. included in this study (`in_study == TRUE`).
 species <- dplyr::filter(blackfish, in_study) |> dplyr::pull(species)
 
 #  Global Biodiversity Information Facility (GBIF) records for the species of
 #  interest, i.e. the ones indicated in `species`.
-oo.gbif <- dwl_gbif_occurrences(species) |>
+oo.gbif <- azores.bkw::dwl_gbif_occurrences(species) |>
   dplyr::rename(datetime = "eventDate") |>
   dplyr::mutate(datetime = str_replace(datetime, "(T\\d{2}:\\d{2}$)", "\\1:00")) |>
-  dplyr::mutate(datetime = lubridate::as_datetime(datetime))
+  # When dates/times are not well formatted we get warnings from as_datetime
+  # that converts those values to NA -- here we suppress those warnings.
+  dplyr::mutate(datetime = suppressWarnings(lubridate::as_datetime(datetime)))
 
 #  Ocean Biodiversity Information System (OBIS) records for the species of
 #  interest, i.e. the ones indicated in `species`.
@@ -40,7 +44,7 @@ oo.obis <-  robis::occurrence(scientificname = species, geometry = extent) |>
 rps_path <- here::here("data-raw/rps_sightings")
 rps_files <- list.files(rps_path, full.names = TRUE)
 
-oo.rps <- purrr::map(rps_files, .f = read_rps_excel) |>
+oo.rps <- purrr::map(rps_files, .f = azores.bkw::read_rps_excel) |>
   purrr::set_names(species) |>
   purrr::list_rbind(names_to = "species") |>
   dplyr::relocate(datetime, .after = 1) |>
@@ -70,5 +74,5 @@ oo.sightings <- dplyr::bind_rows(list(gbif = oo.gbif, obis = oo.obis, rps = oo.r
   dplyr::distinct(date, .keep_all = TRUE)
 
 usethis::use_data(oo.sightings, overwrite = TRUE)
-readr::write_csv(oo.sightings, here::here("data", "orca.sightings.csv.gz"))
+readr::write_csv(oo.sightings, here::here("data-raw", "orca.sightings.csv.gz"))
 
