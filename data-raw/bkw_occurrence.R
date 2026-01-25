@@ -3,6 +3,8 @@ library(tidyverse)
 library(starsExtra)
 library(terra)
 library(tidyterra)
+library(tidyr)
+
 library(azores.rorquals)
 library(azores.bathymetry)
 library(azores.cetaceans)
@@ -106,8 +108,9 @@ bkw_occurrence <-
   dplyr::ungroup() |>
   # Keep only observations at sea.
   sf::st_join(CAOP.RAA.2024::districts(), join = sf::st_within) |>
-  dplyr::select(-c("id", "district", "perimeter", "n_municipalities", "n_parishes", "area"))
+  dplyr::select(-c("id", "district", "perimeter", "n_municipalities", "n_parishes", "area")) |>
+  tidyr::drop_na()
 
-readr::write_csv(bkw_occurrence, "bkw_occurrence_rps.csv.gz")
+readr::write_csv(bkw_occurrence, "data-raw/bkw_occurrence_rps.csv.gz")
 # Save to a folder as a shapefile
-sf::st_write(bkw_occurrence, "bkw_occurrence_rps.shp", append = TRUE)
+sf::st_write(bkw_occurrence, "data-raw/bkw_occurrence_rps.shp", append = TRUE)
