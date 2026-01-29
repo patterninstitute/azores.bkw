@@ -45,3 +45,4 @@ update_raster_names <- function(rast, prefix, var_name, long_name) {
 
   rast
 }
+
