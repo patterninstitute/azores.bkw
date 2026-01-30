@@ -1,5 +1,6 @@
-library(azores.fkw)
 library(here)
+
+library(azores.fkw)
 
 azores_tiff_path <- here::here("data-raw/azores.tiff")
 azores_elevation <- get_elevation(file = azores_tiff_path)
