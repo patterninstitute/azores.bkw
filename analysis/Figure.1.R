@@ -235,13 +235,13 @@ ggsave(figures_path,
 
 
 # Combine Figure 1A and 1B
-bkw.fig1 <- bkw.fig1A / bkw.fig1B #+
-plot_annotation(tag_levels = 'a', tag_prefix = "(", tag_suffix = ")")
+bkw.fig1 <- bkw.fig1A / bkw.fig1B +
+  plot_annotation(tag_levels = 'a', tag_prefix = "(", tag_suffix = ")")
 
 bkw.fig1
 
 #Save Figure 1
-ggsave(figures_path,
+ggplot2::ggsave(figures_path,
        filename = "bkw.fig1.pdf",
        plot = bkw.fig1,
        width = 6,    # Width in inches
