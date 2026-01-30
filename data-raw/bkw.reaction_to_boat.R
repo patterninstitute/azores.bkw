@@ -1,12 +1,12 @@
 library(azores.fkw)
 
 #Load reaction_to_boat
-load("mb.reaction_to_boat.rda")
-load("me.reaction_to_boat.rda")
-load("msp.reaction_to_boat.rda")
-load("zc.reaction_to_boat.rda")
-load("ha.reaction_to_boat.rda")
-load("md.reaction_to_boat.rda")
+load("data/mb.reaction_to_boat.rda")
+load("data/me.reaction_to_boat.rda")
+load("data/msp.reaction_to_boat.rda")
+load("data/zc.reaction_to_boat.rda")
+load("data/ha.reaction_to_boat.rda")
+load("data/md.reaction_to_boat.rda")
 
 # I want to join all the dataframes
 bkw.reaction_to_boat <- rbind(mb.reaction_to_boat,me.reaction_to_boat,msp.reaction_to_boat,md.reaction_to_boat,zc.reaction_to_boat,ha.reaction_to_boat)
