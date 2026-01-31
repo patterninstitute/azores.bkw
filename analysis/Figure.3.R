@@ -3,6 +3,7 @@ library(ggplot2)
 library(dplyr)
 library(forcats)
 library(patchwork)
+library(here)
 
 path <- here::here("/Users/ruisantos/Desktop/Github/azores.bkw/analysis")
 figures_path <- file.path(path, "figures")

@@ -1,6 +1,7 @@
 library(ggplot2)
 library(cowplot)
 library(patchwork)
+library(here)
 
 path <- here::here("/Users/ruisantos/Desktop/Github/azores.bkw/analysis")
 figures_path <- file.path(path, "figures")
@@ -19,7 +20,7 @@ bkw.fig4 <- image_top + plot_spacer() + image_bottom +
 bkw.fig4
 # Save the combined plot as a PDF with specific dimensions
 ggplot2::ggsave(figures_path,
-       filename = "bkw.Fig4.jpg",
+       filename = "bkw.fig4.jpg",
        plot = bkw.fig4,
        width = 6,    # Width in inches
        height = 6.6,  # Height in inches
