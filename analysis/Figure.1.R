@@ -16,7 +16,7 @@ load("data/azores_islands.rda")
 
 bkw_sightings <- azores.rorquals::presences_sf |>
   dplyr::filter(source == "rps") |>
-  filter(species %in% c("Mesoplodon bidens", "Mesoplodon densirostris", "Mesoplodon europaeus",
+  dplyr::filter(species %in% c("Mesoplodon bidens", "Mesoplodon densirostris", "Mesoplodon europaeus",
                         "Mesoplodon mirus", "Hyperoodon ampullatus", "Ziphius cavirostris"))
 
 bkw_sightings <- sf::st_transform(bkw_sightings, 4326)
