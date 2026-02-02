@@ -20,7 +20,7 @@ study_dates <- function(from = "2012-01-01", to = "2018-12-31") {
            by = "day")
 }
 
-#' Index SST raster layers by date
+#' Index sea surface temperature "sst" raster layers by date
 #'
 #' @description
 #'
@@ -119,10 +119,22 @@ extract_sst <- function(sf, dir) {
     sf::st_as_sf()
 }
 
-#
-# For hmlmeso variable
-#
-
+#' Index ocean wet mass content of highly migrant lower mesopelagic micronekton "hmlmeso" raster layers by date
+#'
+#' @description
+#'
+#' [hmlmeso_dates()] creates a lookup table linking each study date to
+#' the corresponding layer index in the hmlmeso NetCDF file.
+#'
+#' @returns A tibble with columns:
+#' \describe{
+#'   \item{date}{Daily study dates.}
+#'   \item{day}{Row index of the date sequence.}
+#'   \item{file}{Name of the NetCDF file containing hmlmeso data.}
+#'   \item{i}{Layer index within the NetCDF file corresponding to each date.}
+#' }
+#'
+#' @export
 hmlmeso_dates <- function() {
   tibble::tibble(date = study_dates()) |>
     tibble::rowid_to_column(var = "day") |>
@@ -132,6 +144,26 @@ hmlmeso_dates <- function() {
     dplyr::mutate(i = seq_len(dplyr::n()), .after = "date") |>
     dplyr::ungroup()
 }
+
+#' Read daily hmlmeso raster
+#'
+#' @description
+#'
+#' [read_hmlmeso()] reads the mass content of highly migrant lower mesopelagic micronekton (hmlmeso) raster
+#' corresponding to a given date from a NetCDF file stored on disk.
+#' The raster is optionally smoothed using a focal mean and projected
+#' to the Azores analysis grid.
+#'
+#'
+#' @param date A `Date` or character coercible to `Date`.
+#' @param dir Directory containing the hmlmeso NetCDF file.
+#' @param resolution Resolution (in meters) of the output raster grid.
+#'   Defaults to 500.
+#' @param w Window size used for focal smoothing. Defaults to 5.
+#'
+#' @returns A `SpatRaster` object projected to the Azores grid.
+#'
+#' @export
 read_hmlmeso <- function(date, dir, resolution = 500, w = 5) {
 
   hmlmeso_dates <- hmlmeso_dates()
@@ -148,6 +180,25 @@ read_hmlmeso <- function(date, dir, resolution = 500, w = 5) {
   terra::project(sp, y = azores.bathymetry::azores_grid(resolution = resolution, type = "rast"), method = "near")
 }
 
+#' Extract hmlmeso values at sf locations
+#'
+#' @description
+#'
+#' [extract_hmlmeso()] extracts highly migrant lower mesopelagic micronekton (hmlmeso) values
+#' for each geometry in an `sf` object based on the corresponding
+#' `date` column.
+#'
+#' Extraction is performed by grouping records by date and matching
+#' each group to the appropriate raster layer.
+#'
+#' @param sf An `sf` object containing a `date` column.
+#' @param dir Directory containing the hmlmeso NetCDF file.
+#'
+#' @returns An `sf` object with the same columns as the input,
+#'   plus an additional column named `"hmlmeso"` placed before
+#'   the geometry column.
+#'
+#' @export
 extract_hmlmeso <- function(sf, dir) {
 
   sf_by_group <- dplyr::group_split(sf, .data$date)
@@ -164,10 +215,22 @@ extract_hmlmeso <- function(sf, dir) {
     sf::st_as_sf()
 }
 
-#
-# For lmeso variable
-#
-
+#' Index ocean wet mass content of lower mesopelagic micronekton "lmeso" raster layers by date
+#'
+#' @description
+#'
+#' [hmlmeso_dates()] creates a lookup table linking each study date to
+#' the corresponding layer index in the hmlmeso NetCDF file.
+#'
+#' @returns A tibble with columns:
+#' \describe{
+#'   \item{date}{Daily study dates.}
+#'   \item{day}{Row index of the date sequence.}
+#'   \item{file}{Name of the NetCDF file containing lmeso data.}
+#'   \item{i}{Layer index within the NetCDF file corresponding to each date.}
+#' }
+#'
+#' @export
 lmeso_dates <- function() {
   tibble::tibble(date = study_dates()) |>
     tibble::rowid_to_column(var = "day") |>
@@ -177,6 +240,26 @@ lmeso_dates <- function() {
     dplyr::mutate(i = seq_len(dplyr::n()), .after = "date") |>
     dplyr::ungroup()
 }
+
+#' Read daily lmeso raster
+#'
+#' @description
+#'
+#' [read_lmeso()] reads the mass content of lower mesopelagic micronekton (lmeso) raster
+#' corresponding to a given date from a NetCDF file stored on disk.
+#' The raster is optionally smoothed using a focal mean and projected
+#' to the Azores analysis grid.
+#'
+#'
+#' @param date A `Date` or character coercible to `Date`.
+#' @param dir Directory containing the lmeso NetCDF file.
+#' @param resolution Resolution (in meters) of the output raster grid.
+#'   Defaults to 500.
+#' @param w Window size used for focal smoothing. Defaults to 5.
+#'
+#' @returns A `SpatRaster` object projected to the Azores grid.
+#'
+#' @export
 read_lmeso <- function(date, dir, resolution = 500, w = 5) {
 
   lmeso_dates <- lmeso_dates()
@@ -194,6 +277,25 @@ read_lmeso <- function(date, dir, resolution = 500, w = 5) {
   terra::project(sp, y = azores.bathymetry::azores_grid(resolution = resolution, type = "rast"), method = "near")
 }
 
+#' Extract lmeso values at sf locations
+#'
+#' @description
+#'
+#' [extract_lmeso()] extracts lower mesopelagic micronekton (lmeso) values
+#' for each geometry in an `sf` object based on the corresponding
+#' `date` column.
+#'
+#' Extraction is performed by grouping records by date and matching
+#' each group to the appropriate raster layer.
+#'
+#' @param sf An `sf` object containing a `date` column.
+#' @param dir Directory containing the hmlmeso NetCDF file.
+#'
+#' @returns An `sf` object with the same columns as the input,
+#'   plus an additional column named `"lmeso"` placed before
+#'   the geometry column.
+#'
+#' @export
 extract_lmeso <- function(sf, dir) {
 
   sf_by_group <- dplyr::group_split(sf, .data$date)
@@ -210,10 +312,22 @@ extract_lmeso <- function(sf, dir) {
     sf::st_as_sf()
 }
 
-#
-# For mlmeso variable
-#
-
+#' Index ocean wet mass content of migrant lower mesopelagic micronekton "mlmeso" raster layers by date
+#'
+#' @description
+#'
+#' [mlmeso_dates()] creates a lookup table linking each study date to
+#' the corresponding layer index in the mlmeso NetCDF file.
+#'
+#' @returns A tibble with columns:
+#' \describe{
+#'   \item{date}{Daily study dates.}
+#'   \item{day}{Row index of the date sequence.}
+#'   \item{file}{Name of the NetCDF file containing mlmeso data.}
+#'   \item{i}{Layer index within the NetCDF file corresponding to each date.}
+#' }
+#'
+#' @export
 mlmeso_dates <- function() {
   tibble::tibble(date = study_dates()) |>
     tibble::rowid_to_column(var = "day") |>
@@ -223,6 +337,26 @@ mlmeso_dates <- function() {
     dplyr::mutate(i = seq_len(dplyr::n()), .after = "date") |>
     dplyr::ungroup()
 }
+
+#' Read daily mlmeso raster
+#'
+#' @description
+#'
+#' [read_mlmeso()] reads the mass content of migrant lower mesopelagic micronekton (mlmeso) raster
+#' corresponding to a given date from a NetCDF file stored on disk.
+#' The raster is optionally smoothed using a focal mean and projected
+#' to the Azores analysis grid.
+#'
+#'
+#' @param date A `Date` or character coercible to `Date`.
+#' @param dir Directory containing the mlmeso NetCDF file.
+#' @param resolution Resolution (in meters) of the output raster grid.
+#'   Defaults to 500.
+#' @param w Window size used for focal smoothing. Defaults to 5.
+#'
+#' @returns A `SpatRaster` object projected to the Azores grid.
+#'
+#' @export
 read_mlmeso <- function(date, dir, resolution = 500, w = 5) {
 
   mlmeso_dates <- mlmeso_dates()
@@ -240,6 +374,25 @@ read_mlmeso <- function(date, dir, resolution = 500, w = 5) {
   terra::project(sp, y = azores.bathymetry::azores_grid(resolution = resolution, type = "rast"), method = "near")
 }
 
+#' Extract mlmeso values at sf locations
+#'
+#' @description
+#'
+#' [extract_mlmeso()] extracts migrant lower mesopelagic micronekton (mlmeso) values
+#' for each geometry in an `sf` object based on the corresponding
+#' `date` column.
+#'
+#' Extraction is performed by grouping records by date and matching
+#' each group to the appropriate raster layer.
+#'
+#' @param sf An `sf` object containing a `date` column.
+#' @param dir Directory containing the hmlmeso NetCDF file.
+#'
+#' @returns An `sf` object with the same columns as the input,
+#'   plus an additional column named `"mlmeso"` placed before
+#'   the geometry column.
+#'
+#' @export
 extract_mlmeso <- function(sf, dir) {
 
   sf_by_group <- dplyr::group_split(sf, .data$date)
