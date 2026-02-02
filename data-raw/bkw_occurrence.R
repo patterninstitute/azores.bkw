@@ -111,6 +111,5 @@ bkw_occurrence <-
   dplyr::select(-c("id", "district", "perimeter", "n_municipalities", "n_parishes", "area")) |>
   tidyr::drop_na()
 
+usethis::use_data(bkw_occurrence, overwrite = TRUE)
 readr::write_csv(bkw_occurrence, "data-raw/bkw_occurrence_rps.csv.gz")
-# Save to a folder as a shapefile
-sf::st_write(bkw_occurrence, "data-raw/bkw_occurrence_rps.shp", append = TRUE)
