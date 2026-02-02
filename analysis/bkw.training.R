@@ -14,7 +14,7 @@ library(azores.fkw)
 
 future::plan(multisession, workers = 10)
 
-bkw_occurrence <- sf::st_as_sf(azores.bkw::bkw_occurrence, coords = "geometry")
+bkw_occurrence <- azores.bkw::bkw_occurrence
 
 #
 # Create a occurrence for Mb and Ha, by keeping absences only for species that not bkw.
@@ -85,7 +85,7 @@ bkw_models <-
   workflowsets::option_add(control = tune::control_grid(save_pred = TRUE, save_workflow = TRUE, parallel_over = "everything"))
 
 # TO BE REMOVED: mb_ha_occurrence_UTM <- sf::st_transform(mb_ha_occurrence, 32626)
-bkw_cv <- spatialsample::spatial_block_cv(mb_ha_occurrence_UTM, v = 5)
+bkw_cv <- spatialsample::spatial_block_cv(mb_ha_occurrence, v = 5)
 autoplot(bkw_cv)
 
 bkw_models02 <-
