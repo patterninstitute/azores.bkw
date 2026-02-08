@@ -9,7 +9,9 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "100%"
+  out.width = "100%",
+  warning = FALSE,
+  message = FALSE
 )
 ```
 
@@ -18,7 +20,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of azores.bkw is to ...
+The goal of `{azores.bkw}` is to provide an R Compendium Accompanying ...
 
 ## Installation
 
@@ -26,4 +28,73 @@ The goal of azores.bkw is to ...
 # install.packages("pak")
 pak::pak("patterninstitute/azores.bkw")
 ```
+## Sightings
 
+A data set of sightings of beaked whales in the Azores, during the period of 2012 and 2018:
+
+```{r sightings}
+library(azores.bkw)
+library(ggplot2)
+library(dplyr)
+library(CAOP.RAA.2024)
+library(azores.rorquals)
+
+bkw.sightings
+```
+
+## Beaked whales occurrences
+
+
+The `bkw_occurrence` dataset is derived from `presences_sf2` from package `azores.rorquals` through
+the following steps:
+
+1. Only observations from the `rps` dataset was keeped
+
+1. Observations with missing (`NA`) values for any climate or topographical
+variable are removed.
+
+2. Observations of the target species---Sowerby’s beaked whale (*Mesoplodon bidens*), 
+True’s beaked whale *Mesoplodon mirus*, Blanville’s beaked whale (*Mesoplodon densirostris*), 
+Gervais’s beaked whale (*Mesoplodon europaeus*), Northern bottlenose whales (*Hyperoodon ampullatus*),
+and Cuvier’s beaked whale (*Ziphius cavirostris*)---are classified as "presence" in the
+class column, while all other species are labeled as "absence".
+
+3. Observations that could simultaneously represent both presences of target
+species and absences of others are excluded.
+
+4. Observations located on land are removed. This issue may arise due to rasterization
+effects in climate and topographical data, when merging locations that are very close to 
+the shore (< 500 m).
+
+```{r fig.width=10, fig.height=8}
+bkw_occurrence
+
+colours <- c(
+  Balaenopteridae = "#0F00FF",
+  Physeteridae = "#F404E2",
+  Ziphiidae = "#FF7A00",
+  Delphinidae  = "#E8E8E8AF",
+  Kogiidae = "#00E000",
+  Balaenidae = "#FFEE00AF",
+  Phocoenidae = "#04B3F4"
+)
+
+islands_triangle <- CAOP.RAA.2024::districts() |>
+  dplyr::filter(district %in% c("Ilha de São Jorge",
+                         "Ilha do Pico",
+                         "Ilha do Faial"))
+
+bkw_occurrence |>
+  dplyr::mutate(season = azores.rorquals::as_season(date)) |>
+  dplyr::left_join(cetaceans(), by = "species") |>
+  tidyr::drop_na(family) |>
+  ggplot() +
+  geom_sf(data = islands_triangle, fill = "black") +
+  geom_sf(mapping = aes(col = family), size = 0.1) +
+  scale_color_manual(values = colours, name = "Cetacean Family") +
+  guides(colour = guide_legend(override.aes = list(size = 3))) +
+  facet_wrap(vars(season)) +
+  theme_minimal() +
+  theme(legend.title = element_text(hjust = 0.5),
+        strip.text = element_text(size = 14))
+```
