@@ -52,7 +52,7 @@ bkw.sightings
 The `bkw_occurrence` dataset is derived from `presences_sf2` from
 package `azores.rorquals` through the following steps:
 
-1.  Only observations from the `rps` dataset was keeped
+1.  Only observations from the `rps` dataset were kept
 
 2.  Observations with missing (`NA`) values for any climate or
     topographical variable are removed.
@@ -127,4 +127,4 @@ bkw_occurrence |>
         strip.text = element_text(size = 14))
 ```
 
-<img src="man/figures/README-unnamed-chunk-2-1.png" alt="" width="100%" />
+<img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
