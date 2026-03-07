@@ -25,16 +25,6 @@ hmlmeso_raw_rast2 <- terra::focal(hmlmeso_raw_rast, w = 3, fun = mean, na.policy
 lmeso_raw_rast2 <- terra::focal(lmeso_raw_rast, w = 3, fun = mean, na.policy = "only", na.rm = TRUE)
 mlmeso_raw_rast2 <- terra::focal(mlmeso_raw_rast, w = 3, fun = mean, na.policy = "only", na.rm = TRUE)
 
-# Give the same CRS to both depth rast and slope rasters as the ref_rast
-depth_raw_rast2 <-  terra::project(
-  depth_raw_rast,
-  terra::crs(ref_rast)  # continuous variable → use bilinear
-)
-
-slope_raw_rast2 <- terra::project(
-  slope_raw_rast,
-  terra::crs(ref_rast))
-
 #
 # Conversion from Kelvin to Celsius.
 #
@@ -45,6 +35,16 @@ sst_rast <- sst_raw_rast2 - 273.15
 # re-rasterizing the other rasters.
 #
 ref_rast <- sst_rast
+
+# Give the same CRS to both depth rast and slope rasters as the ref_rast
+depth_raw_rast2 <-  terra::project(
+  depth_raw_rast,
+  terra::crs(ref_rast)  # continuous variable → use bilinear
+)
+
+slope_raw_rast2 <- terra::project(
+  slope_raw_rast,
+  terra::crs(ref_rast))
 
 #
 # Re-rasterization of other rasters.
@@ -64,7 +64,7 @@ mlmeso_rast <- update_raster_names(mlmeso_rast, "mlmeso", "MLMESO", "migrant low
 sst_rast <- update_raster_names(sst_rast, "sst", "SST", "Sea Surface Temperature")
 
 
-bkw_climate_2012_2018 <- c(
+mb_ha_climate_2012_2018 <- c(
   sst_rast,
   hmlmeso_rast,
   lmeso_rast,
@@ -72,11 +72,11 @@ bkw_climate_2012_2018 <- c(
   depth_rast,
   slope_rast)
 # Remove units by setting them to an empty string
-units(bkw_climate_2012_2018) <- ""
+units(mb_ha_climate_2012_2018) <- ""
 
 
 # Example usage for April-June (AMJ)
-bkw.climate_2012_2018_spring <- bkw.subset_rasters_seasonal_mean_all_years(
+mb_ha.climate_2012_2018_spring <- mb_ha.subset_rasters_seasonal_mean_all_years(
   season = "AMJ",
   sst_rast = sst_rast,
   hmlmeso_rast = hmlmeso_rast,
@@ -85,10 +85,10 @@ bkw.climate_2012_2018_spring <- bkw.subset_rasters_seasonal_mean_all_years(
   depth_rast = depth_rast,
   slope_rast = slope_rast
 )
-names(bkw.climate_2012_2018_spring) <- c("sst", "hmlmeso", "lmeso" ,"mlmeso", "depth", "slope")
+names(mb_ha.climate_2012_2018_spring) <- c("sst", "hmlmeso", "lmeso" ,"mlmeso", "depth", "slope")
 
 # Example for July-September (JAS)
-bkw.climate_2012_2018_summer <- bkw.subset_rasters_seasonal_mean_all_years(
+mb_ha.climate_2012_2018_summer <- mb_ha.subset_rasters_seasonal_mean_all_years(
   season = "JAS",
   sst_rast = sst_rast,
   hmlmeso_rast = hmlmeso_rast,
@@ -97,10 +97,10 @@ bkw.climate_2012_2018_summer <- bkw.subset_rasters_seasonal_mean_all_years(
   depth_rast = depth_rast,
   slope_rast = slope_rast
 )
-names(bkw.climate_2012_2018_summer) <- c("sst", "hmlmeso", "lmeso" ,"mlmeso", "depth", "slope")
+names(mb_ha.climate_2012_2018_summer) <- c("sst", "hmlmeso", "lmeso" ,"mlmeso", "depth", "slope")
 
 # Example for October-December (OND)
-bkw.climate_2012_2018_autumn <- bkw.subset_rasters_seasonal_mean_all_years(
+mb_ha.climate_2012_2018_autumn <- mb_ha.subset_rasters_seasonal_mean_all_years(
   season = "OND",
   sst_rast = sst_rast,
   hmlmeso_rast = hmlmeso_rast,
@@ -109,9 +109,13 @@ bkw.climate_2012_2018_autumn <- bkw.subset_rasters_seasonal_mean_all_years(
   depth_rast = depth_rast,
   slope_rast = slope_rast
 )
-names(bkw.climate_2012_2018_autumn) <- c("sst", "hmlmeso", "lmeso" ,"mlmeso", "depth", "slope")
+names(mb_ha.climate_2012_2018_autumn) <- c("sst", "hmlmeso", "lmeso" ,"mlmeso", "depth", "slope")
 
+export_path <- "data-raw/env-layers-by-season"
+spring_file <- file.path(export_path, "mb_ha.climate_2012_2018_spring.tif")
+summer_file <- file.path(export_path, "mb_ha.climate_2012_2018_summer.tif")
+autumn_file <- file.path(export_path, "mb_ha.climate_2012_2018_autumn.tif")
 
-terra::writeRaster(x = bkw.climate_2012_2018_spring, filename = "data-raw/cms-azores-data/bkw.climate_2012_2018_spring.tif", overwrite = TRUE)
-terra::writeRaster(x = bkw.climate_2012_2018_summer, filename = "data-raw/cms-azores-data/bkw.climate_2012_2018_summer.tif", overwrite = TRUE)
-terra::writeRaster(x = bkw.climate_2012_2018_autumn, filename = "data-raw/cms-azores-data/bkw.climate_2012_2018_autumn.tif", overwrite = TRUE)
+terra::writeRaster(x = mb_ha.climate_2012_2018_spring, filename = spring_file, overwrite = TRUE)
+terra::writeRaster(x = mb_ha.climate_2012_2018_summer, filename = summer_file, overwrite = TRUE)
+terra::writeRaster(x = mb_ha.climate_2012_2018_autumn, filename = autumn_file, overwrite = TRUE)

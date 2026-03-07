@@ -1,7 +1,7 @@
 #' Compute monthly mean rasters across all years
 #'
 #' @description
-#' [bkw.subset_rasters_monthly_mean_all_years()] extracts all layers
+#' [mb_ha.subset_rasters_monthly_mean_all_years()] extracts all layers
 #' corresponding to a given month across multiple years for each dynamic
 #' predictor and computes the mean raster for that month.
 #'
@@ -42,7 +42,7 @@
 #' an error.
 #'
 #' @export
-bkw.subset_rasters_monthly_mean_all_years <- function(month,
+mb_ha.subset_rasters_monthly_mean_all_years <- function(month,
                                                       sst_rast,
                                                       hmlmeso_rast,
                                                       lmeso_rast,
@@ -52,7 +52,7 @@ bkw.subset_rasters_monthly_mean_all_years <- function(month,
   # Helper function to extract layers for a specific month across all years
   extract_month_all_years <- function(raster, var_prefix, month) {
     layer_indices <- grep(paste0(var_prefix, "_\\d{4}", month), names(raster))
-    mean(raster[[layer_indices]])
+    terra::mean(raster[[layer_indices]])
   }
 
   c(
@@ -68,7 +68,7 @@ bkw.subset_rasters_monthly_mean_all_years <- function(month,
 #' Compute seasonal mean rasters across all years
 #'
 #' @description
-#' [bkw.subset_rasters_seasonal_mean_all_years()] extracts all layers
+#' [mb_ha.subset_rasters_seasonal_mean_all_years()] extracts all layers
 #' corresponding to a given season across multiple years for each dynamic
 #' predictor and computes the mean raster for that season.
 #'
@@ -115,7 +115,7 @@ bkw.subset_rasters_monthly_mean_all_years <- function(month,
 #' matching. An error is returned if an invalid season is supplied.
 #'
 #' @export
-bkw.subset_rasters_seasonal_mean_all_years <- function(season,
+mb_ha.subset_rasters_seasonal_mean_all_years <- function(season,
                                                        sst_rast,
                                                        hmlmeso_rast,
                                                        lmeso_rast,
@@ -126,7 +126,7 @@ bkw.subset_rasters_seasonal_mean_all_years <- function(season,
   extract_season_all_years <- function(raster, var_prefix, season_months) {
     month_regex <- paste0(season_months, collapse = "|")
     layer_indices <- grep(paste0(var_prefix, "_\\d{4}(", month_regex, ")"), names(raster))
-    mean(raster[[layer_indices]])
+    terra::mean(raster[[layer_indices]])
   }
 
   seasons <- list(
