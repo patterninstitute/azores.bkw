@@ -1,47 +1,44 @@
-library(tidyverse)
 library(tidysdm)
-library(sf)
 library(terra)
 library(tidyterra)
-library(ggbeeswarm)
-library(DALEX)
-library(units)
-
+library(readr)
 library(azores.fkw)
-
 
 #
 # Prediction
 #
 
-### Upload the saved emsemble ###
-bkw_ensemble <- readr::read_rds("data/bkw_ensemble_rps.rds")
-bkw.climate_2012_2018_spring <- terra::rast(x = "data-raw/cms-azores-data/bkw.climate_2012_2018_spring.tif")
-bkw.climate_2012_2018_summer <- terra::rast(x = "data-raw/cms-azores-data/bkw.climate_2012_2018_summer.tif")
-bkw.climate_2012_2018_autumn <- terra::rast(x = "data-raw/cms-azores-data/bkw.climate_2012_2018_autumn.tif")
+# Set file paths
+env_layers_path <- "data-raw/env-layers-by-season"
+env_layer_spring_path <- file.path(env_layers_path, "mb_ha.climate_2012_2018_spring.tif")
+env_layer_summer_path <- file.path(env_layers_path, "mb_ha.climate_2012_2018_summer.tif")
+env_layer_autumn_path <- file.path(env_layers_path, "mb_ha.climate_2012_2018_autumn.tif")
 
-# define extent: xmin, xmax, ymin, ymax
-extent <- ext(-29, -27.5, 38, 38.8)
+prediction_path <- "analysis/predictions"
+spring_prediction_path <- file.path(prediction_path, "mb_ha_prediction_spring.tif")
+summer_prediction_path <- file.path(prediction_path, "mb_ha_prediction_summer.tif")
+autumn_prediction_path <- file.path(prediction_path, "mb_ha_prediction_autumn.tif")
 
-# crop
-bkw.climate_2012_2018_spring_study_area <- terra::crop(bkw.climate_2012_2018_spring, extent)
-bkw.climate_2012_2018_summer_study_area <- terra::crop(bkw.climate_2012_2018_summer, extent)
-bkw.climate_2012_2018_autumn_study_area <- terra::crop(bkw.climate_2012_2018_autumn, extent)
+# Define study area extent: xmin, xmax, ymin, ymax
+extent <- terra::ext(-29, -27.5, 38, 38.8)
 
-### Predict for the season of spring ###
-bkw_prediction_spring <- tidysdm::predict_raster(bkw_ensemble, bkw.climate_2012_2018_spring_study_area)
+# Import ensemble of models
+mb_ha_ensemble <- readr::read_rds("analysis/models/ensemble-model-mb-ha.rds")
+mb_ha.climate_2012_2018_spring <- terra::rast(x = env_layer_spring_path)
+mb_ha.climate_2012_2018_summer <- terra::rast(x = env_layer_summer_path)
+mb_ha.climate_2012_2018_autumn <- terra::rast(x = env_layer_autumn_path)
 
-### Save the predicted raster for the season of spring ###
-terra::writeRaster(x = bkw_prediction_spring, filename = "analysis/bkw_prediction_spring.tif", overwrite = TRUE)
+# Crop areas
+mb_ha.climate_2012_2018_spring_study_area <- terra::crop(mb_ha.climate_2012_2018_spring, extent)
+mb_ha.climate_2012_2018_summer_study_area <- terra::crop(mb_ha.climate_2012_2018_summer, extent)
+mb_ha.climate_2012_2018_autumn_study_area <- terra::crop(mb_ha.climate_2012_2018_autumn, extent)
 
-### Predict for the season of summer ###
-bkw_prediction_summer <- tidysdm::predict_raster(bkw_ensemble, bkw.climate_2012_2018_summer_study_area)
+# Calculate predictions
+mb_ha_prediction_spring <- tidysdm::predict_raster(mb_ha_ensemble, mb_ha.climate_2012_2018_spring_study_area)
+mb_ha_prediction_summer <- tidysdm::predict_raster(mb_ha_ensemble, mb_ha.climate_2012_2018_summer_study_area)
+mb_ha_prediction_autumn <- tidysdm::predict_raster(mb_ha_ensemble, mb_ha.climate_2012_2018_autumn_study_area)
 
-### Save the predicted raster for the season of summer ###
-terra::writeRaster(x = bkw_prediction_summer, filename = "analysis/bkw_prediction_summer.tif", overwrite = TRUE)
-
-### Predict for the season of autumn ###
-bkw_prediction_autumn <- predict_raster(bkw_ensemble, bkw.climate_2012_2018_autumn_study_area)
-
-### Save the predicted raster for the season of summer ###
-terra::writeRaster(x = bkw_prediction_autumn, filename = "analysis/bkw_prediction_autumn.tif", overwrite = TRUE)
+# Save predictions to disk
+terra::writeRaster(x = mb_ha_prediction_spring, filename = spring_prediction_path, overwrite = TRUE)
+terra::writeRaster(x = mb_ha_prediction_summer, filename = summer_prediction_path, overwrite = TRUE)
+terra::writeRaster(x = mb_ha_prediction_autumn, filename = autumn_prediction_path, overwrite = TRUE)
