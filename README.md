@@ -7,7 +7,9 @@
 
 <!-- badges: end -->
 
-The goal of `{azores.bkw}` is to provide an R Compendium Accompanying …
+The goal of `{azores.bkw}` is to provide an R Compendium Accompanying for Peres dos Santos, R., Sears, R., Magno, R. and Castilho, R. _Ecology and Seasonal Habitat Use of Northern Bottlenose
+and Sowerby's Beaked Whales in the Azores_. Marine Mammal Science 32:2, 42:e70172 (2026).
+DOI: [10.1111/mms.70172](https://doi.org/10.1111/mms.70172).
 
 ## Installation
 
