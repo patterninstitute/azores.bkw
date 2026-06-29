@@ -19,9 +19,9 @@ Authors@R: c(
     )
 Description: An R Compendium providing data, code and documentation needed to
     replicate the results of the paper Peres dos Santos, R., Sears, R.,
-     Magno, R. and Castilho, R. xxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxx
-    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx. JOURNAL XX, DDD–DDD (YYYY).
-    <doi:xx.xxxx/xxxxxx-xxx-xxxxx-x>.
+     Magno, R. and Castilho, R. Ecology and Seasonal Habitat Use of Northern Bottlenose
+     and Sowerby's Beaked Whales in the Azores. Marine Mammal Science 32:2, 42:e70172 (2026).
+    <doi:10.1111/mms.70172>
 License: CC BY 4.0
 Encoding: UTF-8
 LazyData: true
